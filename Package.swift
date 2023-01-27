@@ -6,9 +6,9 @@ import PackageDescription
 let package = Package(
     name: "MetalCompilerPlugin",
     platforms: [
-        .iOS("16.0"),
-        .macOS("13.0"),
-        .macCatalyst("16.0"),
+        .iOS("14.0"),
+        .macOS("11.0"),
+        .macCatalyst("14.0"),
     ],
     products: [
         .plugin(name: "MetalCompilerPlugin", targets: ["MetalCompilerPlugin"]),

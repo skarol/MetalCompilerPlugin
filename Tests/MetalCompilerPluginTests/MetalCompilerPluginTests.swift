@@ -7,7 +7,9 @@ final class MetalCompilerPluginTests: XCTestCase {
 
         // TODO: This only works under Xcode Unit Tests. But fails when run from `swift test` command line.
 
-        let shadersBundleURL = Bundle(for: MetalCompilerPluginTests.self).resourceURL!.appending(path: "MetalCompilerPlugin_ExampleShaders.bundle")
+        let shadersBundlePath = Bundle(for: MetalCompilerPluginTests.self)
+            .resourcePath! + "/MetalCompilerPlugin_ExampleShaders.bundle"
+        let shadersBundleURL = URL(string: shadersBundlePath)!
         let bundle = Bundle(url: shadersBundleURL)!
         let libraryURL = bundle.url(forResource: "debug", withExtension: "metallib")!
         let device = MTLCreateSystemDefaultDevice()!
