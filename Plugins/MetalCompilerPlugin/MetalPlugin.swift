@@ -5,6 +5,7 @@ import PackagePlugin
 @main
 struct MetalPlugin: BuildToolPlugin {
     func createBuildCommands(context: PackagePlugin.PluginContext, target: PackagePlugin.Target) async throws -> [PackagePlugin.Command] {
+        #if DEBUG
         var paths: [Path] = []
         target.directory.walk { path in
             if path.pathExtension == "metal" {
@@ -28,6 +29,9 @@ struct MetalPlugin: BuildToolPlugin {
                 ]
             ),
         ]
+        #else
+        return []
+        #endif
     }
 }
 
