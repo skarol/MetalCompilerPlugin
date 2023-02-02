@@ -5,7 +5,6 @@ import PackagePlugin
 @main
 struct MetalPlugin: BuildToolPlugin {
     func createBuildCommands(context: PackagePlugin.PluginContext, target: PackagePlugin.Target) async throws -> [PackagePlugin.Command] {
-        #if DEBUG
         var paths: [Path] = []
         target.directory.walk { path in
             if path.pathExtension == "metal" {
@@ -13,10 +12,14 @@ struct MetalPlugin: BuildToolPlugin {
             }
         }
         Diagnostics.remark("Running...")
+        guard let metalCompilerTool = try? context.tool(named: "MetalCompilerTool") else {
+            Diagnostics.remark("MetalCompilerTool not found. Skipping plugin build.")
+            return []
+        }
         return [
             .buildCommand(
                 displayName: "Test",
-                executable: try context.tool(named: "MetalCompilerTool").path,
+                executable: metalCompilerTool.path,
                 arguments: [
                     "--output", context.pluginWorkDirectory.appending(["debug.metallib"]).string,
                 ]
@@ -29,9 +32,6 @@ struct MetalPlugin: BuildToolPlugin {
                 ]
             ),
         ]
-        #else
-        return []
-        #endif
     }
 }
 
