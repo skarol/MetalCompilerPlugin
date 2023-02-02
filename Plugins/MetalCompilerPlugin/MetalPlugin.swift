@@ -12,25 +12,27 @@ struct MetalPlugin: BuildToolPlugin {
             }
         }
         Diagnostics.remark("Running...")
-        guard let metalCompilerTool = try? context.tool(named: "MetalCompilerTool") else {
-            Diagnostics.remark("MetalCompilerTool not found. Skipping plugin build.")
-            return []
-        }
+        let arguments = [
+            "metal",
+        ]
+            + [
+                "-o",
+                context.pluginWorkDirectory.appending(["debug.metallib"]).string,
+                "-gline-tables-only",
+                "-frecord-sources",
+            ]
+            + paths.map(\.string)
         return [
             .buildCommand(
                 displayName: "Test",
-                executable: metalCompilerTool.path,
-                arguments: [
-                    "--output", context.pluginWorkDirectory.appending(["debug.metallib"]).string,
-                ]
-                    + paths.map(\.string),
-
+                executable: Path("/usr/bin/xcrun"),
+                arguments: arguments,
                 environment: [:],
                 inputFiles: paths,
                 outputFiles: [
-                    context.pluginWorkDirectory.appending(["debug.metallib"]),
+                    context.pluginWorkDirectory.appending(["debug.metallib"])
                 ]
-            ),
+            )
         ]
     }
 }
@@ -40,7 +42,8 @@ extension Path {
         let errorHandler = { (_: URL, _: Swift.Error) -> Bool in
             true
         }
-        guard let enumerator = FileManager().enumerator(at: url, includingPropertiesForKeys: nil, options: [], errorHandler: errorHandler) else {
+        guard let enumerator = FileManager().enumerator(at: url, includingPropertiesForKeys: nil, options: [], errorHandler: errorHandler)
+        else {
             fatalError()
         }
         for url in enumerator {

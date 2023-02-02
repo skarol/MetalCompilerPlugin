@@ -18,7 +18,7 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
     ],
     targets: [
-        .plugin(name: "MetalCompilerPlugin", capability: .buildTool(), dependencies: ["MetalCompilerTool"]),
+        .plugin(name: "MetalCompilerPlugin", capability: .buildTool()),
         .executableTarget(name: "MetalCompilerTool", dependencies: [
             .product(name: "ArgumentParser", package: "swift-argument-parser"),
         ]),
